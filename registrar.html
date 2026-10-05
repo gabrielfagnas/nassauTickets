@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrando um usuário no sistema com login e senha</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    
+    <style>
+body {
+    font-family: 'Inter', sans-serif;
+    background: #f0f0f0;
+    margin: 0;
+}
+
+.container {
+    background: url(https://thumbs.dreamstime.com/b/nebulosa-azul-do-espa%C3%A7o-48496064.jpg) center bottom / cover;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.registro {
+    width: 400px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.6);
+    border: 5px solid #1c0370;
+    border-radius: 20px;
+    box-shadow: 0 0 10px #fff;
+    text-align: center;
+}
+
+.registro img {
+    width: 300px;
+    display: block;
+    margin: 0 auto;
+}
+
+.registro h2 {
+    margin: 10px 0;
+    text-transform: uppercase;
+}
+
+.registro input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    border: 1px solid #913636;
+    border-radius: 30px;
+    text-align: center;
+}
+
+.registro button {
+    width: 100%;
+    padding: 10px;
+    background: #33373b;
+    color: #fff;
+    border: 0;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.registro button:hover {
+    background: #090909;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="registro">
+            <img src="https://cdn.freebiesupply.com/logos/large/2x/nassau-1-logo-png-transparent.png" alt="logo do site">
+            <h2>Registrar</h2>
+
+            <form action="process_register.php" method="POST">
+
+            <input type="email" 
+            id="email" 
+            name="email" 
+            placeholder="Seu Email" required>
+
+            <input type="password" 
+            id="password" 
+            name="senha" 
+            minlength="6" 
+            maxlength="100"
+            pattern="^(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{6,}$"
+            title="A senha deve ter pelo menos 6 caracteres, incluindo uma letra maiúscula e um caractere especial."
+            placeholder="Sua Senha" required>
+
+            <input type="password" 
+            id="confirm_password" 
+            name="confirmar_senha" 
+            placeholder="Confirmar Senha" 
+            minlength="6" 
+            maxlength="100" required>
+
+<p>
+    Ao clicar em "Registrar", você concorda com nossos
+    <a href="#">Termos de Serviço</a> e
+    <a href="#">Política de Privacidade</a>.
+</p>
+
+<p>
+    Já possui uma conta?
+    <a href="login.html">Faça login</a>
+</p>
+
+<button type="button" onclick="window.location.href='login.html'">
+    Registrar
+</button>
+
+        </form>
+
+    </div>
+</body>
+</html>
+

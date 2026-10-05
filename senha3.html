@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Controle de Atendimento</title>
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      /* FUNDO */
+
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        min-height: 100vh;
+        position: relative;
+        background: #eef1f5;
+      }
+
+      /* IMAGEM DE FUNDO */
+
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+
+        width: 100%;
+        height: 100%;
+
+        background-image: url("https://wallpaperaccess.com/full/476126.jpg");
+        background-size: cover;
+        background-position: center;
+
+        opacity: 0.75;
+
+        filter: blur(2px);
+
+        z-index: -2;
+      }
+
+      /* CAMADA TRANSPARENTE SOBRE O FUNDO */
+
+      body::after {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+
+        width: 100%;
+        height: 100%;
+
+        background: rgba(238, 241, 245, 0.55);
+
+        z-index: -1;
+      }
+
+      /* CABEÇALHO */
+
+      header {
+        background: rgba(28, 3, 112, 0.95);
+        color: white;
+        padding: 20px 30px;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+      }
+
+      header h1 {
+        margin: 0;
+      }
+
+      .logout {
+        background: #d9534f;
+        border: none;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      .logout:hover {
+        background: #b52b27;
+      }
+
+      /* CONTEÚDO */
+
+      .container {
+        width: 90%;
+        max-width: 1100px;
+        margin: 30px auto;
+      }
+
+      /* SENHA ATUAL */
+
+      .senha-atual {
+        background: rgba(255, 255, 255, 0.88);
+
+        padding: 30px;
+        border-radius: 15px;
+        text-align: center;
+
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.25);
+
+        backdrop-filter: blur(5px);
+      }
+
+      .senha-atual h2 {
+        margin-top: 0;
+      }
+
+      #senhaAtual {
+        font-size: 60px;
+        font-weight: bold;
+        color: #1c0370;
+        margin: 20px;
+      }
+
+      /* BOTÕES */
+
+      .botoes {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 20px;
+      }
+
+      button {
+        border: none;
+        padding: 15px 22px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+
+        transition: 0.2s;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+      }
+
+      /* CHAMAR PRÓXIMA */
+
+      .chamar {
+        background: #1c0370;
+        color: white;
+      }
+
+      .chamar:hover {
+        background: #2905a0;
+      }
+
+      /* SENHA PRIORITÁRIA */
+
+      .prioridade {
+        background: #d9534f;
+        color: white;
+      }
+
+      .prioridade:hover {
+        background: #b52b27;
+      }
+
+      /* RETIRADA DE EXAMES */
+
+      .exames {
+        background: #337ab7;
+        color: white;
+      }
+
+      .exames:hover {
+        background: #245b89;
+      }
+
+      /* SENHA GERAL */
+
+      .geral {
+        background: #5cb85c;
+        color: white;
+      }
+
+      .geral:hover {
+        background: #398439;
+      }
+
+      /* DESCARTAR */
+
+      .descartar {
+        background: #f0ad4e;
+        color: white;
+      }
+
+      .descartar:hover {
+        background: #d88916;
+      }
+
+      /* RELATÓRIO */
+
+      .relatorio {
+        background: #6f42c1;
+        color: white;
+      }
+
+      .relatorio:hover {
+        background: #56339c;
+      }
+
+      /* RESETAR */
+
+      .resetar {
+        background: #292929;
+        color: white;
+      }
+
+      .resetar:hover {
+        background: #000000;
+      }
+
+      /* RELATÓRIO */
+
+      .relatorios {
+        display: none;
+        margin-top: 30px;
+
+        background: rgba(255, 255, 255, 0.88);
+
+        padding: 25px;
+
+        border-radius: 15px;
+
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.25);
+
+        backdrop-filter: blur(5px);
+      }
+
+      .relatorios h2 {
+        margin-top: 0;
+      }
+
+      .dados {
+        display: grid;
+
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+
+        gap: 15px;
+      }
+
+      .card {
+        padding: 20px;
+
+        background: rgba(245, 245, 245, 0.9);
+
+        border-radius: 10px;
+
+        text-align: center;
+      }
+
+      .card h3 {
+        margin: 0 0 10px;
+      }
+
+      .numero {
+        font-size: 35px;
+        font-weight: bold;
+        color: #1c0370;
+      }
+
+      /* FILA */
+
+      .fila {
+        margin-top: 30px;
+
+        background: rgba(255, 255, 255, 0.88);
+
+        padding: 25px;
+
+        border-radius: 15px;
+
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.25);
+
+        backdrop-filter: blur(5px);
+      }
+
+      .fila ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .fila li {
+        padding: 12px;
+
+        border-bottom: 1px solid #ddd;
+
+        font-weight: bold;
+      }
+
+      /* CORES DOS TIPOS NA FILA */
+
+      .fila li.sp {
+        color: #d9534f;
+      }
+
+      .fila li.se {
+        color: #337ab7;
+      }
+
+      .fila li.sg {
+        color: #398439;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <!-- CABEÇALHO -->
+
+    <header>
+      <h1>Controle de Atendimento</h1>
+
+      <button class="logout" onclick="logout()">Logout</button>
+    </header>
+
+
+    <div class="container">
+
+      <!-- SENHA ATUAL -->
+
+      <div class="senha-atual">
+
+        <h2>Senha atual</h2>
+
+        <div id="senhaAtual">---</div>
+
+        <div class="botoes">
+
+          <!-- CHAMAR POR TIPO -->
+
+          <button
+            class="prioridade"
+            onclick="chamarTipo('SP')"
+          >
+            Chamar SP
+          </button>
+
+          <button
+            class="exames"
+            onclick="chamarTipo('SE')"
+          >
+            Chamar SE
+          </button>
+
+          <button
+            class="geral"
+            onclick="chamarTipo('SG')"
+          >
+            Chamar SG
+          </button>
+
+          <!-- CHAMAR AUTOMATICAMENTE -->
+
+          <button
+            class="chamar"
+            onclick="chamarSenha()"
+          >
+            Chamar Próxima
+          </button>
+
+          <!-- OUTRAS FUNÇÕES -->
+
+          <button
+            class="descartar"
+            onclick="descartarSenha()"
+          >
+            Descartar Senha
+          </button>
+
+          <button
+            class="relatorio"
+            onclick="mostrarRelatorio()"
+          >
+            Relatórios
+          </button>
+
+          <button
+            class="resetar"
+            onclick="resetarSenhas()"
+          >
+            Resetar Senhas
+          </button>
+
+        </div>
+      </div>
+
+
+      <!-- FILA -->
+
+      <div class="fila">
+
+        <h2>Fila de atendimento</h2>
+
+        <ul id="fila">
+
+          <li class="sp">SP001</li>
+          <li class="se">SE001</li>
+          <li class="sg">SG001</li>
+          <li class="sp">SP002</li>
+          <li class="sg">SG002</li>
+
+        </ul>
+
+      </div>
+
+
+      <!-- RELATÓRIOS -->
+
+      <div
+        class="relatorios"
+        id="relatorios"
+      >
+
+        <h2>Relatório de Atendimento</h2>
+
+        <div class="dados">
+
+          <div class="card">
+
+            <h3>Senhas Emitidas</h3>
+
+            <div
+              class="numero"
+              id="emitidas"
+            >
+              5
+            </div>
+
+          </div>
+
+
+          <div class="card">
+
+            <h3>Senhas Chamadas</h3>
+
+            <div
+              class="numero"
+              id="chamadas"
+            >
+              0
+            </div>
+
+          </div>
+
+
+          <div class="card">
+
+            <h3>Senhas Atendidas</h3>
+
+            <div
+              class="numero"
+              id="atendidas"
+            >
+              0
+            </div>
+
+          </div>
+
+
+          <div class="card">
+
+            <h3>Senhas Descartadas</h3>
+
+            <div
+              class="numero"
+              id="descartadas"
+            >
+              0
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <script>
+
+      /* CONTADORES */
+
+      let chamadas = 0;
+
+      let atendidas = 0;
+
+      let descartadas = 0;
+
+
+      /* =========================================
+         CHAMAR UM TIPO ESPECÍFICO
+      ========================================= */
+
+      function chamarTipo(tipo) {
+
+        const fila = document.getElementById("fila");
+
+        const senhas = fila.querySelectorAll("li");
+
+        let senhaEncontrada = null;
+
+
+        /*
+          Procura a primeira senha
+          do tipo selecionado.
+        */
+
+        for (let senha of senhas) {
+
+          if (senha.textContent.startsWith(tipo)) {
+
+            senhaEncontrada = senha;
+
+            break;
+
+          }
+
+        }
+
+
+        /* Se não encontrou */
+
+        if (!senhaEncontrada) {
+
+          alert(
+            "Não existem senhas " +
+            tipo +
+            " aguardando."
+          );
+
+          return;
+
+        }
+
+
+        /* Pega o número */
+
+        const senha = senhaEncontrada.textContent;
+
+
+        /* Mostra senha atual */
+
+        document.getElementById(
+          "senhaAtual"
+        ).textContent = senha;
+
+
+        /* Remove da fila */
+
+        senhaEncontrada.remove();
+
+
+        /* Incrementa chamadas */
+
+        chamadas++;
+
+
+        document.getElementById(
+          "chamadas"
+        ).textContent = chamadas;
+
+      }
+
+
+      /* =========================================
+         CHAMAR PRÓXIMA
+      ========================================= */
+
+      function chamarSenha() {
+
+        const fila = document.getElementById("fila");
+
+        const senhas = fila.querySelectorAll("li");
+
+        let senhaEncontrada = null;
+
+
+        /*
+          Ordem de prioridade:
+
+          1 - SP
+          2 - SE
+          3 - SG
+        */
+
+
+        /* Procura SP */
+
+        for (let senha of senhas) {
+
+          if (
+            senha.textContent.startsWith("SP")
+          ) {
+
+            senhaEncontrada = senha;
+
+            break;
+
+          }
+
+        }
+
+
+        /* Se não encontrou SP, procura SE */
+
+        if (!senhaEncontrada) {
+
+          for (let senha of senhas) {
+
+            if (
+              senha.textContent.startsWith("SE")
+            ) {
+
+              senhaEncontrada = senha;
+
+              break;
+
+            }
+
+          }
+
+        }
+
+
+        /* Se não encontrou SE, procura SG */
+
+        if (!senhaEncontrada) {
+
+          for (let senha of senhas) {
+
+            if (
+              senha.textContent.startsWith("SG")
+            ) {
+
+              senhaEncontrada = senha;
+
+              break;
+
+            }
+
+          }
+
+        }
+
+
+        /* Nenhuma senha */
+
+        if (!senhaEncontrada) {
+
+          alert(
+            "Não existem senhas na fila."
+          );
+
+          return;
+
+        }
+
+
+        /* Pega senha */
+
+        const senha =
+          senhaEncontrada.textContent;
+
+
+        /* Mostra */
+
+        document.getElementById(
+          "senhaAtual"
+        ).textContent = senha;
+
+
+        /* Remove da fila */
+
+        senhaEncontrada.remove();
+
+
+        /* Incrementa */
+
+        chamadas++;
+
+
+        document.getElementById(
+          "chamadas"
+        ).textContent = chamadas;
+
+      }
+
+
+      /* =========================================
+         DESCARTAR SENHA
+      ========================================= */
+
+      function descartarSenha() {
+
+        const senhaAtual =
+          document.getElementById(
+            "senhaAtual"
+          );
+
+
+        if (
+          senhaAtual.textContent === "---"
+        ) {
+
+          alert(
+            "Nenhuma senha selecionada."
+          );
+
+          return;
+
+        }
+
+
+        if (
+          confirm(
+            "Deseja realmente descartar a senha " +
+            senhaAtual.textContent +
+            "?"
+          )
+        ) {
+
+          descartadas++;
+
+
+          document.getElementById(
+            "descartadas"
+          ).textContent =
+            descartadas;
+
+
+          senhaAtual.textContent =
+            "---";
+
+        }
+
+      }
+
+
+      /* =========================================
+         MOSTRAR RELATÓRIO
+      ========================================= */
+
+      function mostrarRelatorio() {
+
+        const relatorio =
+          document.getElementById(
+            "relatorios"
+          );
+
+
+        if (
+          relatorio.style.display ===
+          "block"
+        ) {
+
+          relatorio.style.display =
+            "none";
+
+        } else {
+
+          relatorio.style.display =
+            "block";
+
+        }
+
+      }
+
+
+      /* =========================================
+         RESETAR SENHAS
+      ========================================= */
+
+      function resetarSenhas() {
+
+        if (
+          !confirm(
+            "Tem certeza que deseja resetar todas as senhas?"
+          )
+        ) {
+
+          return;
+
+        }
+
+
+        /* Limpa fila */
+
+        document.getElementById(
+          "fila"
+        ).innerHTML = "";
+
+
+        /* Limpa senha atual */
+
+        document.getElementById(
+          "senhaAtual"
+        ).textContent = "---";
+
+
+        /* Reseta contadores */
+
+        chamadas = 0;
+
+        atendidas = 0;
+
+        descartadas = 0;
+
+
+        document.getElementById(
+          "chamadas"
+        ).textContent = 0;
+
+
+        document.getElementById(
+          "atendidas"
+        ).textContent = 0;
+
+
+        document.getElementById(
+          "descartadas"
+        ).textContent = 0;
+
+
+        alert(
+          "Sistema de senhas resetado."
+        );
+
+      }
+
+
+      /* =========================================
+         LOGOUT
+      ========================================= */
+
+      function logout() {
+
+        if (
+          confirm(
+            "Deseja realmente sair?"
+          )
+        ) {
+
+          window.location.href =
+            "login.html";
+
+        }
+
+      }
+
+    </script>
+
+  </body>
+</html>
